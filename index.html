@@ -1,11 +1,571 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneOnlyPrice — ของชำออนไลน์ ราคาเดียวทุกชิ้น</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #E7D9B8;
+    --paper-light: #F1E7CE;
+    --paper-dark: #D9C79E;
+    --ink: #2A2318;
+    --ink-soft: #6B6152;
+    --green: #1F5D45;
+    --green-dark: #143F30;
+    --mustard: #D79A2C;
+    --mustard-dark: #B87F1C;
+    --line: rgba(42,35,24,0.14);
+    --radius: 6px;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(0,0,0,0.06), transparent 40%);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .display{ font-family: 'Chonburi', 'IBM Plex Sans Thai', sans-serif; font-weight: 400; }
+  .mono{ font-family: 'Space Mono', monospace; }
+
+  a{ color: inherit; text-decoration: none; }
+  ul{ list-style: none; }
+  img,svg{ display:block; max-width:100%; }
+
+  .wrap{ max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Header ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: var(--paper-light);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 28px; max-width: 1160px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo-mark{
+    width:34px; height:34px; border-radius:50%;
+    background: var(--green); color: var(--paper-light);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace; font-weight:700; font-size:13px;
+    transform: rotate(-8deg);
+    box-shadow: 0 0 0 2px var(--paper-light), 0 0 0 3px var(--green);
+  }
+  .logo-word{ font-family:'Chonburi',sans-serif; font-size: 22px; letter-spacing: 0.2px; }
+  .logo-word span{ color: var(--green); }
+
+  nav.links{ display:flex; align-items:center; gap:32px; }
+  nav.links a{
+    font-size: 14.5px; font-weight:500; color: var(--ink-soft);
+    padding: 6px 2px; border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  nav.links a:hover{ color: var(--ink); border-color: var(--mustard); }
+
+  .cta-pill{
+    background: var(--green); color: var(--paper-light);
+    padding: 11px 22px; border-radius: 999px;
+    font-size: 14px; font-weight:600;
+    border: 1px solid var(--green-dark);
+    transition: transform .15s ease, background .2s;
+    display:inline-block;
+  }
+  .cta-pill:hover{ background: var(--green-dark); transform: translateY(-1px); }
+  .cta-outline{
+    padding: 10px 22px; border-radius: 999px;
+    border: 1.5px solid var(--ink); font-size: 14px; font-weight:600;
+    display:inline-block; transition: background .2s, color .2s;
+  }
+  .cta-outline:hover{ background: var(--ink); color: var(--paper-light); }
+
+  .burger{ display:none; background:none; border:none; cursor:pointer; padding:6px; }
+  .burger span{ display:block; width:24px; height:2px; background:var(--ink); margin:5px 0; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding: 80px 0 60px;
+    position: relative;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Space Mono',monospace; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; color: var(--green-dark);
+    background: rgba(31,93,69,0.1); border:1px solid rgba(31,93,69,0.25);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .hero h1{
+    font-size: clamp(32px, 4.4vw, 52px);
+    line-height: 1.28;
+    max-width: 620px;
+    margin-bottom: 22px;
+  }
+  .hero h1 em{ font-style:normal; color: var(--green); }
+  .hero p.lead{
+    font-size: 17px; color: var(--ink-soft); max-width: 520px; margin-bottom: 34px;
+  }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 40px; }
+
+  .trust-row{ display:flex; gap:28px; flex-wrap:wrap; }
+  .trust-item{ display:flex; align-items:center; gap:8px; font-size: 13.5px; color: var(--ink-soft); }
+  .trust-item svg{ width:16px; height:16px; flex-shrink:0; }
+
+  /* Stamp badge */
+  .stamp-wrap{ position:relative; display:flex; justify-content:center; align-items:center; }
+  .stamp{
+    position:relative; width: 300px; height:300px;
+    transform: rotate(-9deg);
+    filter: drop-shadow(0 8px 18px rgba(20,63,48,0.28));
+  }
+  .stamp svg{ width:100%; height:100%; }
+  .stamp-text{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    color: var(--paper-light); transform: rotate(-9deg);
+    mix-blend-mode: normal;
+  }
+  .stamp-text .small{
+    font-family:'Space Mono',monospace; font-size:13px; letter-spacing:3px;
+    text-transform:uppercase; opacity:0.9; margin-bottom:6px;
+  }
+  .stamp-text .price{
+    font-family:'Space Mono',monospace; font-weight:700; font-size:54px; line-height:1;
+  }
+  .stamp-text .unit{
+    font-family:'Space Mono',monospace; font-size:16px; letter-spacing:2px; margin-top:8px;
+  }
+  .stamp-float{
+    position:absolute; font-family:'Space Mono',monospace; font-size:12px;
+    color: var(--ink-soft); background: var(--paper-light);
+    border:1px dashed var(--line); border-radius:999px; padding:6px 12px;
+  }
+  .float-1{ top: -6px; right: -8px; transform: rotate(6deg); }
+  .float-2{ bottom: 6px; left: -18px; transform: rotate(-4deg); }
+
+  /* ---------- Section shared ---------- */
+  section{ padding: 76px 0; }
+  .section-head{ max-width: 620px; margin-bottom: 48px; }
+  .section-eyebrow{
+    font-family:'Space Mono',monospace; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color: var(--green-dark); margin-bottom:12px; display:block;
+  }
+  .section-head h2{ font-size: clamp(26px,3vw,34px); line-height:1.3; }
+  .section-head p{ color: var(--ink-soft); margin-top:14px; font-size:15.5px; }
+
+  /* ---------- Why one price ---------- */
+  .why{ background: var(--paper-light); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .why-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .why-card{
+    background: var(--paper); border:1px solid var(--line); border-radius: var(--radius);
+    padding: 30px 26px; position:relative;
+  }
+  .why-card .num{
+    font-family:'Space Mono',monospace; font-size:13px; color: var(--mustard-dark);
+    border:1px solid var(--mustard-dark); border-radius:50%;
+    width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:18px;
+  }
+  .why-card h3{ font-size:18px; margin-bottom:10px; }
+  .why-card p{ font-size:14.5px; color: var(--ink-soft); }
+
+  /* ---------- Categories ---------- */
+  .cat-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .cat-card{
+    background: var(--paper-light); border:1px solid var(--line); border-radius: var(--radius);
+    padding: 24px; display:flex; flex-direction:column; gap:16px;
+    position:relative; overflow:hidden; transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .cat-card:hover{ transform: translateY(-3px); box-shadow: 0 10px 22px rgba(42,35,24,0.12); }
+  .cat-card::before{
+    content:""; position:absolute; top:-14px; right:-14px; width:60px; height:60px;
+    border-radius:50%; background: rgba(215,154,44,0.18);
+  }
+  .cat-icon{ width:40px; height:40px; color: var(--green); z-index:1; }
+  .cat-card h4{ font-size:16px; z-index:1; }
+  .cat-card span.tag{
+    font-family:'Space Mono',monospace; font-size:12px; color: var(--green-dark);
+    background: rgba(31,93,69,0.1); border:1px solid rgba(31,93,69,0.25);
+    padding:4px 10px; border-radius:999px; width:fit-content; z-index:1;
+  }
+
+  /* ---------- Products ---------- */
+  .products{ background: var(--paper-light); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .prod-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .prod-card{
+    background: var(--paper); border:1px solid var(--line); border-radius: var(--radius);
+    overflow:hidden; display:flex; flex-direction:column;
+  }
+  .prod-img{
+    aspect-ratio: 1/0.9; background: var(--paper-dark);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .prod-img svg{ width:56px; height:56px; color: var(--green); }
+  .prod-badge{
+    position:absolute; top:10px; left:10px; background: var(--green); color:var(--paper-light);
+    font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1px;
+    padding:4px 9px; border-radius:999px; transform: rotate(-4deg);
+  }
+  .prod-body{ padding: 16px 16px 18px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .prod-body h5{ font-size:14.5px; font-weight:600; }
+  .prod-body .price-row{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+  .prod-body .price-row .price{ font-family:'Space Mono',monospace; font-weight:700; color: var(--green-dark); font-size:15px; }
+  .add-btn{
+    width:32px; height:32px; border-radius:50%; background: var(--mustard); color: var(--ink);
+    border:none; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: background .2s;
+  }
+  .add-btn:hover{ background: var(--mustard-dark); color: var(--paper-light); }
+
+  /* ---------- Testimonials ---------- */
+  .quote-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:24px; }
+  .quote-card{ padding: 26px; border-left: 3px solid var(--mustard); background: var(--paper-light); border-radius: 0 var(--radius) var(--radius) 0; }
+  .quote-card p.q{ font-size:15px; margin-bottom:16px; color: var(--ink); }
+  .quote-card .who{ font-family:'Space Mono',monospace; font-size:12.5px; color: var(--ink-soft); }
+
+  /* ---------- CTA band ---------- */
+  .cta-band{
+    background: var(--green); color: var(--paper-light);
+    border-radius: var(--radius); padding: 56px 44px;
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+  }
+  .cta-band h3{ font-family:'Chonburi',sans-serif; font-size: clamp(22px,2.6vw,30px); max-width:480px; }
+  .cta-band .cta-pill{ background: var(--mustard); color: var(--ink); border-color: var(--mustard-dark); }
+  .cta-band .cta-pill:hover{ background: var(--mustard-dark); color: var(--paper-light); }
+
+  /* ---------- Footer ---------- */
+  footer{ background: var(--ink); color: var(--paper); padding: 56px 0 28px; }
+  .foot-grid{ display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 40px; }
+  .foot-logo{ font-family:'Chonburi',sans-serif; font-size:20px; margin-bottom:12px; color: var(--paper-light); }
+  .foot-desc{ font-size:13.5px; color: #B5AA96; max-width: 260px; }
+  footer h6{ font-size:13px; letter-spacing:1px; text-transform:uppercase; color:#B5AA96; margin-bottom:14px; }
+  footer ul li{ margin-bottom:10px; }
+  footer ul li a{ font-size:14px; color:#D9CFBC; transition:color .2s; }
+  footer ul li a:hover{ color: var(--mustard); }
+  .foot-bottom{
+    border-top:1px solid rgba(255,255,255,0.1); padding-top:22px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-size:12.5px; color:#8F846F;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 880px){
+    nav.links, .nav .cta-pill{ display:none; }
+    .burger{ display:block; }
+    .hero-grid{ grid-template-columns: 1fr; }
+    .stamp-wrap{ order:-1; margin-bottom: 20px; }
+    .stamp{ width:220px; height:220px; }
+    .stamp-text .price{ font-size:46px; }
+    .why-grid, .cat-grid{ grid-template-columns: 1fr 1fr; }
+    .prod-grid{ grid-template-columns: 1fr 1fr; }
+    .quote-grid{ grid-template-columns: 1fr; }
+    .foot-grid{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px){
+    .why-grid, .cat-grid, .prod-grid{ grid-template-columns: 1fr; }
+    .cta-band{ flex-direction:column; align-items:flex-start; }
+    .foot-grid{ grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-    
+
+<!-- SVG filter for the stamp's rough ink edge -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="inkEdge" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<header>
+  <div class="nav">
+    <div class="logo">
+      <div class="logo-mark">1</div>
+      <div class="logo-word">One<span>Only</span>Price</div>
+    </div>
+    <nav class="links">
+      <a href="#categories">หมวดหมู่</a>
+      <a href="#why">ทำไมราคาเดียว</a>
+      <a href="#products">สินค้าแนะนำ</a>
+      <a href="#reviews">รีวิว</a>
+      <a href="#contact">ติดต่อ</a>
+    </nav>
+    <a href="#products" class="cta-pill">เริ่มช้อปเลย</a>
+    <button class="burger" aria-label="เมนู"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">ของชำออนไลน์ • ส่งทั่วไทย</span>
+      <h1 class="display">ของกินของใช้ทุกชิ้น <em>ราคาเดียว</em> ไม่มีข้อยกเว้น</h1>
+      <p class="lead">เลิกไล่เทียบราคาให้เมื่อยตา ไม่ว่าจะข้าวสาร น้ำปลา หรือกระดาษชำระ ทุกชิ้นในร้านเราติดราคาเดียวกันหมด ตรวจสอบได้ทุกออเดอร์ ไม่มีตัวเลขซ่อน</p>
+      <div class="hero-actions">
+        <a href="#products" class="cta-pill">ดูสินค้าทั้งหมด</a>
+        <a href="#why" class="cta-outline">ราคาเดียวคำนวณยังไง</a>
+      </div>
+      <div class="trust-row">
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg>
+          จัดส่งทั่วประเทศ
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg>
+          คัดคุณภาพก่อนขึ้นชั้น
+        </div>
+        <div class="trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4 4L19 6"/></svg>
+          ราคาที่เห็น คือราคาที่จ่าย
+        </div>
+      </div>
+    </div>
+
+    <div class="stamp-wrap">
+      <div class="stamp">
+        <svg viewBox="0 0 300 300">
+          <circle cx="150" cy="150" r="140" fill="#1F5D45" filter="url(#inkEdge)"/>
+        </svg>
+        <div class="stamp-text">
+          <span class="small">ทุกชิ้น</span>
+          <span class="price">108</span>
+          <span class="unit">บาท / ชิ้น</span>
+        </div>
+      </div>
+      <div class="stamp-float float-1">ไม่มีขั้นบันไดราคา</div>
+      <div class="stamp-float float-2">อัปเดตล่าสุดวันนี้</div>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-eyebrow">หลักการของเรา</span>
+      <h2 class="display">ทำไม “ราคาเดียว” ถึงคุ้มกว่า</h2>
+      <p>เราออกแบบร้านทั้งร้านรอบแนวคิดเดียว — ตัดขั้นตอนเทียบราคาออกไป เหลือแค่หยิบของที่ต้องใช้</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="num mono">01</div>
+        <h3 class="display">ไม่ต้องคิดเลข</h3>
+        <p>หยิบใส่ตะกร้าได้เลยโดยไม่ต้องกดเครื่องคิดเลขเทียบทีละชิ้น เพราะทุกอย่างราคาเท่ากันหมด</p>
+      </div>
+      <div class="why-card">
+        <div class="num mono">02</div>
+        <h3 class="display">โปร่งใส ตรวจสอบได้</h3>
+        <p>ราคาที่ติดไว้บนเว็บคือราคาที่จ่ายจริงในบิล ไม่มีค่าธรรมเนียมแอบแฝงหรือส่วนลดหลอกตา</p>
+      </div>
+      <div class="why-card">
+        <div class="num mono">03</div>
+        <h3 class="display">คุณภาพคัดสรรก่อนขึ้นราคา</h3>
+        <p>สินค้าทุกชิ้นผ่านการคัดคุณภาพก่อนเข้าร้าน เราไม่ลดคุณภาพเพื่อกดราคาให้เท่ากัน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-eyebrow">เลือกดูตามหมวด</span>
+      <h2 class="display">หมวดหมู่สินค้า</h2>
+      <p>ทุกหมวด ราคาเดียวกันทั้งหมด ต่างกันแค่ชนิดของสินค้า</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l1 5H5l1-5z"/><path d="M5 8l1.5 12a1 1 0 001 1h9a1 1 0 001-1L19 8"/><path d="M9 12v4M15 12v4"/></svg>
+        <h4>อาหารแห้ง</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2h6v3l2 2v13a2 2 0 01-2 2H9a2 2 0 01-2-2V7l2-2V2z"/><path d="M9 10h6"/></svg>
+        <h4>เครื่องปรุงรส</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="8" width="16" height="12" rx="1"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
+        <h4>ของใช้ในบ้าน</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a4 4 0 00-4 4v2H6a2 2 0 00-2 2l1 10a2 2 0 002 2h10a2 2 0 002-2l1-10a2 2 0 00-2-2h-2V6a4 4 0 00-4-4z"/></svg>
+        <h4>ขนม &amp; เครื่องดื่ม</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+        <h4>ของใช้ส่วนตัว</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+      <div class="cat-card">
+        <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M4 8l8-5 8 5M4 8v10l8 5 8-5V8"/></svg>
+        <h4>สินค้าตามฤดูกาล</h4>
+        <span class="tag mono">฿108 / ชิ้น</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-eyebrow">ขายดีประจำสัปดาห์</span>
+      <h2 class="display">สินค้าแนะนำ</h2>
+      <p>ตัวอย่างสินค้าขายดี ทุกชิ้นราคาเดียวกัน — ปรับรายการและรูปได้ตามสต็อกจริงของร้าน</p>
+    </div>
+    <div class="prod-grid">
+      <div class="prod-card">
+        <div class="prod-img">
+          <span class="prod-badge mono">ราคาเดียว</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l1 5H5l1-5z"/><path d="M5 8l1.5 12a1 1 0 001 1h9a1 1 0 001-1L19 8"/></svg>
+        </div>
+        <div class="prod-body">
+          <h5>ข้าวหอมมะลิ 1 กก.</h5>
+          <div class="price-row"><span class="price">฿108</span><button class="add-btn">+</button></div>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">
+          <span class="prod-badge mono">ราคาเดียว</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2h6v3l2 2v13a2 2 0 01-2 2H9a2 2 0 01-2-2V7l2-2V2z"/></svg>
+        </div>
+        <div class="prod-body">
+          <h5>น้ำปลาแท้ 300 มล.</h5>
+          <div class="price-row"><span class="price">฿108</span><button class="add-btn">+</button></div>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">
+          <span class="prod-badge mono">ราคาเดียว</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="8" width="16" height="12" rx="1"/></svg>
+        </div>
+        <div class="prod-body">
+          <h5>กระดาษชำระ 6 ม้วน</h5>
+          <div class="price-row"><span class="price">฿108</span><button class="add-btn">+</button></div>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-img">
+          <span class="prod-badge mono">ราคาเดียว</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a4 4 0 00-4 4v2H6a2 2 0 00-2 2l1 10a2 2 0 002 2h10a2 2 0 002-2l1-10a2 2 0 00-2-2h-2V6a4 4 0 00-4-4z"/></svg>
+        </div>
+        <div class="prod-body">
+          <h5>บิสกิตข้าวโอ๊ต</h5>
+          <div class="price-row"><span class="price">฿108</span><button class="add-btn">+</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-eyebrow">เสียงจากลูกค้า</span>
+      <h2 class="display">พวกเขาว่ายังไงบ้าง</h2>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <p class="q">"สั่งของใช้ในบ้านทีเดียวหมดปัญหา ไม่ต้องมานั่งเทียบราคาทีละร้าน กดสั่งรวดเดียวจบ"</p>
+        <div class="who mono">— คุณนิด, กรุงเทพฯ</div>
+      </div>
+      <div class="quote-card">
+        <p class="q">"ชอบที่ราคาตรงไปตรงมา เปิดบิลมาไม่มีอะไรเซอร์ไพรส์ ของก็คุณภาพดีกว่าที่คิด"</p>
+        <div class="who mono">— คุณเอ, เชียงใหม่</div>
+      </div>
+      <div class="quote-card">
+        <p class="q">"ส่งไวกว่าที่คิด แพ็คมาดี ของชำที่บ้านใช้ประจำมีครบ สั่งซ้ำทุกเดือนเลย"</p>
+        <div class="who mono">— คุณแนน, ขอนแก่น</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <h3>พร้อมเลิกเทียบราคาแล้วหรือยัง?</h3>
+      <a href="#products" class="cta-pill">เริ่มช้อป OneOnlyPrice</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">OneOnlyPrice</div>
+        <p class="foot-desc">ของชำออนไลน์ที่ทุกชิ้นราคาเดียวกัน คัดคุณภาพก่อนขึ้นชั้น จัดส่งทั่วประเทศไทย</p>
+      </div>
+      <div>
+        <h6>หมวดหมู่</h6>
+        <ul>
+          <li><a href="#categories">อาหารแห้ง</a></li>
+          <li><a href="#categories">เครื่องปรุงรส</a></li>
+          <li><a href="#categories">ของใช้ในบ้าน</a></li>
+          <li><a href="#categories">ขนม &amp; เครื่องดื่ม</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>ร้านค้า</h6>
+        <ul>
+          <li><a href="#why">ทำไมราคาเดียว</a></li>
+          <li><a href="#products">สินค้าแนะนำ</a></li>
+          <li><a href="#reviews">รีวิวลูกค้า</a></li>
+          <li><a href="#">นโยบายจัดส่ง</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>ติดต่อ</h6>
+        <ul>
+          <li><a href="#">Line: @oneonlyprice</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">hello@oneonlyprice.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 OneOnlyPrice. สงวนลิขสิทธิ์.</span>
+      <span>ของชำออนไลน์ • ราคาเดียวทุกชิ้น • ส่งทั่วไทย</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle (simple show/hide of nav links)
+  const burger = document.querySelector('.burger');
+  const navLinks = document.querySelector('nav.links');
+  burger.addEventListener('click', () => {
+    const visible = navLinks.style.display === 'flex';
+    navLinks.style.display = visible ? 'none' : 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '68px';
+    navLinks.style.left = '0';
+    navLinks.style.right = '0';
+    navLinks.style.background = 'var(--paper-light)';
+    navLinks.style.padding = '20px 28px';
+    navLinks.style.borderBottom = '1px solid var(--line)';
+    navLinks.style.gap = '18px';
+  });
+</script>
+
 </body>
 </html>
